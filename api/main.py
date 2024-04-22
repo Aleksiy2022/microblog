@@ -1,11 +1,29 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 
 app = FastAPI()
 
 
-@app.post("/api/tweets")
-async def get_tweets(api_key: str):
+@app.get("/api/users/me")
+async def get_tweets():
+    print("***************************")
+    print("Запрос пришел сюда")
     return {
         "result": "true",
-        "tweet_id": 1
+        "user": {
+            "id": 1,
+            "name": "Ivan",
+            "followers": [
+                {
+                    "id": 2,
+                    "name": "Oleg"
+                }
+            ],
+            "following": [
+                {
+                    "id": 3,
+                    "name": "Kirill"
+                }
+            ]
+        }
     }
+

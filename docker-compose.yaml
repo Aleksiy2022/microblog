@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 services:
 #  db:
@@ -22,23 +22,19 @@ services:
 
   api:
     container_name: "api"
-#    depends_on:
-#      - db
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["uvicorn", "api.main:app", "--reload"]
+    command: uvicorn api.main:app --reload --port 8000 --host localhost
     restart: always
     ports:
       - "8000:8000"
 
   nginx:
     container_name: "nginx"
-    depends_on:
-      - api
     image: nginx
     volumes:
-      - .nginx.conf:/etc/nginx/nginx.conf
-      - .static:/usr/share/nginx/static
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./static:/usr/share/nginx/html/static
     ports:
       - "80:80"
