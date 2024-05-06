@@ -1,8 +1,13 @@
 FROM python:3.12
 
-WORKDIR /api
 COPY api api
-COPY requirements.txt requirements.txt
+COPY pyproject.toml poetry.lock ./
+COPY README.md ./
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip  \
+    && pip install poetry  \
+    && poetry config virtualenvs.create false  \
+    && poetry install --no-dev
+
+WORKDIR api
+CMD python main.py

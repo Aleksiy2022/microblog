@@ -1,40 +1,46 @@
-version: "3.9"
+version: '3.8'
 
 services:
-#  db:
-#    container_name: "postgres"
-#    image: postgres
-#    restart: always
-#    environment:
-#      - POSTGRES_DB=twitter_clone
-#      - POSTGRES_PASSWORD=!1234QWER
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - ./dbdata:/var/lib/postgresql/data
-#
-#  adminer:
-#    container_name: "adminer"
-#    image: adminer
-#    restart: always
-#    ports:
-#      - "8080:8080"
+  db:
+    container_name: "db"
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=!1234QWER
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+#      - ./confs/postgresql/my_postgresql.conf:/etc/postgresql/postgresql.conf
+#      - ./api/db/log-volume:/var/log/postgresql
+#    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
 
-  api:
-    container_name: "api"
+  adminer:
+    container_name: "adminer"
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  twitter:
+    container_name: "twitter"
+    depends_on:
+      - db
     build:
       context: .
       dockerfile: Dockerfile
-    command: uvicorn api.main:app --reload --port 8000 --host localhost
     restart: always
     ports:
       - "8000:8000"
 
   nginx:
     container_name: "nginx"
+    depends_on:
+      - twitter
     image: nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./static:/usr/share/nginx/html/static
+      - ./confs/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./static:/static
     ports:
       - "80:80"

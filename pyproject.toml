@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "twitter-clone"
+version = "0.1.0"
+description = ""
+authors = ["Aleksey Kuznetcov"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+SQLAlchemy = "^2.0.30"
+uvicorn = "^0.29.0"
+alembic = "^1.13.1"
+pydantic-settings = "^2.2.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+black = "^24.4.2"
+mypy = "^1.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
