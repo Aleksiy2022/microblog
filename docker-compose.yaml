@@ -6,7 +6,7 @@ services:
     image: postgres
     restart: always
     environment:
-      - POSTGRES_USER=admin
+      - POSTGRES_USER=twitter_clone
       - POSTGRES_PASSWORD=!1234QWER
     ports:
       - "5432:5432"
@@ -34,13 +34,14 @@ services:
     ports:
       - "8000:8000"
 
-  nginx:
-    container_name: "nginx"
-    depends_on:
-      - twitter
-    image: nginx
-    volumes:
-      - ./confs/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./static:/static
-    ports:
-      - "80:80"
+#
+#  nginx:
+#    container_name: "nginx"
+#    depends_on:
+#      - twitter
+#    image: nginx
+#    volumes:
+#      - ./confs/nginx/nginx.conf:/etc/nginx/nginx.conf
+#      - ./static:/static
+#    ports:
+#      - "80:80"
