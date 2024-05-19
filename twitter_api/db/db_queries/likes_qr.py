@@ -17,7 +17,7 @@ async def create_tweet_like(session: AsyncSession, tweet_id: int, api_key: str) 
 
 async def delete_tweet_like(session: AsyncSession, tweet_id: int, api_key: str) -> bool:
     user_id = await get_current_user_id(session, api_key=api_key)
-    stmt = delete(TweetLike).where(TweetLike.tweet_id == tweet_id, User.id == user_id)
+    stmt = delete(TweetLike).where(TweetLike.tweet_id == tweet_id, TweetLike.user_id == user_id)
     await session.execute(stmt)
     await session.commit()
     return True
