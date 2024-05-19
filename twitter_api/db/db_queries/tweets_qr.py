@@ -1,7 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..models import Tweet, Follower, User, Image
+from ..models import Tweet, Image
 from sqlalchemy import select, delete
 from sqlalchemy.orm import selectinload
+from .users_qr import get_current_user_id
 
 
 async def get_tweets_user_followings(session: AsyncSession, api_key) -> list[Tweet]:
@@ -43,8 +44,9 @@ async def create_tweet(
     return tweet.id
 
 
-async def delete_tweet(session: AsyncSession, tweet_id: int) -> bool:
-    stmt = delete(Tweet).where(Tweet.id == tweet_id)
+async def delete_tweet(session: AsyncSession, tweet_id: int = None, api_key: str = None) -> bool:
+    user_id = await get_current_user_id(session, api_key=api_key)
+    stmt = delete(Tweet).where(Tweet.id == tweet_id, Tweet.user_id == user_id)
     await session.execute(stmt)
     await session.commit()
     return True
