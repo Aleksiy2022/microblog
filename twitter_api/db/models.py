@@ -20,17 +20,17 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(50))
     api_key: Mapped[str] = mapped_column(unique=True)
 
-    followers: Mapped[List["User"]] = relationship(
-        secondary="user_followers",
-        primaryjoin="User.id==Follower.user_id",
-        secondaryjoin="User.id==Follower.follower",
-        lazy="noload",
-        back_populates="following",
-    )
     following: Mapped[List["User"]] = relationship(
         secondary="user_followers",
         primaryjoin="User.id==Follower.follower",
         secondaryjoin="User.id==Follower.user_id",
+        lazy="noload",
+        back_populates="following",
+    )
+    followers: Mapped[List["User"]] = relationship(
+        secondary="user_followers",
+        primaryjoin="User.id==Follower.user_id",
+        secondaryjoin="User.id==Follower.follower",
         lazy="noload",
         back_populates="followers",
     )
