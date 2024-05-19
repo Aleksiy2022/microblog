@@ -13,4 +13,4 @@ RUN pip install --upgrade pip  \
 
 CMD alembic revision --autogenerate -m "create initial tables"  \
     && alembic upgrade head  \
-    && uvicorn twitter_api.main:app --reload --port 8000 --host localhost
+    && uvicorn twitter_api.main:app --reload --port 8000 --host 0.0.0.0
