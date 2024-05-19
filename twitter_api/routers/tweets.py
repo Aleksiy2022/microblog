@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Form, Body
+from fastapi import APIRouter, Depends, Body, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Any
 from ..db import tweets_qr, schemas, users_qr, medias_qr, likes_qr
@@ -11,36 +11,32 @@ router = APIRouter(
 )
 
 
-@router.post("/{id}/likes")
-async def create_tweet_like(
+@router.api_route("/{id}/likes", methods=["POST", "DELETE"])
+async def tweet_likes(
         id: int,
-        session: AsyncSession = Depends(scoped_session_db),
+        request: Request,
         api_key: Any = Depends(get_api_key),
-):
-    if await likes_qr.create_tweet_like(session, tweet_id=id, api_key=api_key):
-        return {
-            "result": True
-        }
-
-
-@router.delete("/{id}/likes")
-async def delete_tweet_like(
-        id: int,
         session: AsyncSession = Depends(scoped_session_db),
-        api_key: Any = Depends(get_api_key),
 ):
-    if await likes_qr.delete_tweet_like(session, tweet_id=id, api_key=api_key):
-        return {
-            "result": True
-        }
+    if request.method == "POST":
+        if await likes_qr.create_tweet_like(session, tweet_id=id, api_key=api_key):
+            return {
+                "result": True
+            }
+    elif request.method == "DELETE":
+        if await likes_qr.delete_tweet_like(session, tweet_id=id, api_key=api_key):
+            return {
+                "result": True
+            }
 
 
 @router.delete("/{id}")
 async def delete_tweet(
         id: int,
-        session: AsyncSession = Depends(scoped_session_db)
+        api_key: Any = Depends(get_api_key),
+        session: AsyncSession = Depends(scoped_session_db),
 ):
-    if await tweets_qr.delete_tweet(session, tweet_id=id):
+    if await tweets_qr.delete_tweet(session, tweet_id=id, api_key=api_key):
         return {
             "result": True
         }
