@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Body, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..db import User, likes_qr, medias_qr, schemas, tweets_qr
+from ..db import likes_qr, medias_qr, schemas, tweets_qr
 from ..dependencies import get_current_user_by_api_key, scoped_session_db
 
 router = APIRouter(
@@ -19,7 +19,9 @@ router = APIRouter(
 async def tweet_likes(
     id: int,
     request: Request,
-    current_user: Annotated[User, Depends(get_current_user_by_api_key)],
+    current_user: Annotated[
+        schemas.UserOut, Depends(get_current_user_by_api_key)
+    ],
     session: Annotated[AsyncSession, Depends(scoped_session_db)],
 ):
     if request.method == "POST":
@@ -70,7 +72,9 @@ async def get_tweets(
 async def create_tweet(
     tweet_data: Annotated[str, Body()],
     tweet_media_ids: Annotated[list[int] | None, Body()],
-    current_user: Annotated[User, Depends(get_current_user_by_api_key)],
+    current_user: Annotated[
+        schemas.UserOut, Depends(get_current_user_by_api_key)
+    ],
     session: Annotated[AsyncSession, Depends(scoped_session_db)],
 ):
     tweet_id = await tweets_qr.create_tweet(
@@ -93,7 +97,9 @@ async def create_tweet(
 @router.delete("/{id}")
 async def delete_tweet(
     id: int,
-    current_user: Annotated[User, Depends(get_current_user_by_api_key)],
+    current_user: Annotated[
+        schemas.UserOut, Depends(get_current_user_by_api_key)
+    ],
     session: Annotated[AsyncSession, Depends(scoped_session_db)],
 ):
     if await tweets_qr.delete_tweet(

@@ -17,4 +17,6 @@ async def get_current_user_by_api_key(
     session: Annotated[AsyncSession, Depends(scoped_session_db)],
     api_key: Annotated[str, Header()],
 ) -> User:
+    print("*******************")
+    print(api_key)
     return await users_qr.get_current_user(session, api_key=api_key)

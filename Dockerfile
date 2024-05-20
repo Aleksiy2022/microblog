@@ -11,6 +11,5 @@ RUN pip install --upgrade pip  \
     && poetry config virtualenvs.create false  \
     && poetry install --no-dev
 
-CMD alembic revision --autogenerate -m "create initial tables"  \
-    && alembic upgrade head  \
+CMD alembic upgrade head  \
     && uvicorn twitter_api.main:app --reload --port 8000 --host 0.0.0.0
