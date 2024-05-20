@@ -1,7 +1,10 @@
-from async_factory_boy.factory.sqlalchemy import AsyncSQLAlchemyFactory
-from .models import User, Tweet, TweetLike, Image, Base
+import factory  # type: ignore
+from async_factory_boy.factory.sqlalchemy import (  # type: ignore
+    AsyncSQLAlchemyFactory,
+)
+
 from ..core import db_helper
-import factory
+from .models import Base, Tweet, User
 
 
 class TestUser(AsyncSQLAlchemyFactory):
@@ -18,8 +21,8 @@ class UserFactory(AsyncSQLAlchemyFactory):
         model = User
         sqlalchemy_session = db_helper.sc_session
 
-    name = factory.Faker('first_name')
-    api_key = factory.Faker('ean')
+    name = factory.Faker("first_name")
+    api_key = factory.Faker("ean")
 
 
 class TweetFactory(AsyncSQLAlchemyFactory):
@@ -29,7 +32,7 @@ class TweetFactory(AsyncSQLAlchemyFactory):
         sqlalchemy_session = db_helper.sc_session
         sqlalchemy_session_persistence = "commit"
 
-    content = factory.Faker('text')
+    content = factory.Faker("text")
     user_id = factory.Sequence(lambda n: "user_id%s" % n)
 
 

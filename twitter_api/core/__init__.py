@@ -4,5 +4,5 @@ __all__ = (
     "settings",
 )
 
-from .dbhelper import db_helper, DatabaseHelper
 from .config import settings
+from .dbhelper import DatabaseHelper, db_helper

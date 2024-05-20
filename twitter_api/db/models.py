@@ -1,6 +1,7 @@
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, String
 from typing import List
+
+from sqlalchemy import ForeignKey, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -10,8 +11,20 @@ class Base(DeclarativeBase):
 class Follower(Base):
     __tablename__ = "user_followers"
 
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
-    follower: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "users.id",
+            ondelete="CASCADE",
+        ),
+        primary_key=True,
+    )
+    follower: Mapped[int] = mapped_column(
+        ForeignKey(
+            "users.id",
+            ondelete="CASCADE",
+        ),
+        primary_key=True,
+    )
 
 
 class User(Base):
@@ -79,15 +92,33 @@ class Image(Base):
     __tablename__ = "images"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    tweet_id: Mapped[int] = mapped_column(ForeignKey("tweets.id", ondelete="CASCADE",), nullable=True)
+    tweet_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "tweets.id",
+            ondelete="CASCADE",
+        ),
+        nullable=True,
+    )
     src: Mapped[str]
 
 
 class TweetLike(Base):
     __tablename__ = "tweet_likes"
 
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
-    tweet_id: Mapped[int] = mapped_column(ForeignKey("tweets.id", ondelete="CASCADE"), primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "users.id",
+            ondelete="CASCADE",
+        ),
+        primary_key=True,
+    )
+    tweet_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "tweets.id",
+            ondelete="CASCADE",
+        ),
+        primary_key=True,
+    )
 
     user: Mapped["User"] = relationship(back_populates="tweet_likes")
     tweet: Mapped["Tweet"] = relationship(back_populates="tweet_likes")

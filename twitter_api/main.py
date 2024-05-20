@@ -1,10 +1,11 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-from .routers import users, tweets, media
-from .db import create_fake_data_bd
 from sqlalchemy import select
-from .db import User
+
 from .core import db_helper
+from .db import User, create_fake_data_bd
+from .routers import media, tweets, users
 
 
 @asynccontextmanager
@@ -13,11 +14,7 @@ async def lifespan(app: FastAPI):
     stmt = select(User).where(User.id == 1)
     user: User | None = await session.scalar(stmt)
     if not user:
-        print('Создаем базу данных')
         await create_fake_data_bd()
-        print("БД создана")
-    else:
-        print("БД уже заполнена")
     yield
 
 

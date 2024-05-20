@@ -23,6 +23,17 @@ aiofiles = "^23.2.1"
 pytest = "^8.2.0"
 black = "^24.4.2"
 mypy = "^1.10.0"
+isort = "^5.13.2"
+flake8 = "^7.0.0"
+flake8-bugbear = "^24.4.26"
+flake8-pie = "^0.16.0"
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 79
 
 [build-system]
 requires = ["poetry-core"]
