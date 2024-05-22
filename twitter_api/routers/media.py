@@ -1,6 +1,7 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..db import medias_qr
@@ -15,16 +16,19 @@ router = APIRouter(
 
 @router.post("/")
 async def load_media(
-    file: UploadFile,
+    file: Annotated[UploadFile, File()],
     session: Annotated[AsyncSession, Depends(scoped_session_db)],
 ):
-    image_src = await save_tweet_image(file)
-    media_id = await medias_qr.create_media(
-        session,
-        image_src=image_src,
-    )
+    try:
+        image_src = await save_tweet_image(file)
+        media_id = await medias_qr.create_media(
+            session,
+            image_src=image_src,
+        )
 
-    return {
-        "result": True,
-        "media_id": media_id,
-    }
+        return {
+            "result": True,
+            "media_id": media_id,
+        }
+    except SQLAlchemyError:
+        raise HTTPException(status_code=500, detail="Failed to load image")
