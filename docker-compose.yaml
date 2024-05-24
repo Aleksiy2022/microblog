@@ -8,12 +8,14 @@ services:
     environment:
       - POSTGRES_USER=twitter_clone
       - POSTGRES_PASSWORD=!1234QWER
+      - POSTGRES_MULTIPLE_DATABASES=twitter_clone_1,test_twitter_clone_1
     ports:
       - "5432:5432"
     volumes:
       - ./dbdata:/var/lib/postgresql/data
       - ./confs/postgresql/my_postgresql.conf:/etc/postgresql/postgresql.conf
       - ./logs/postgresql/log-volume:/var/log/postgresql
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
 
   adminer:
     container_name: "adminer"
