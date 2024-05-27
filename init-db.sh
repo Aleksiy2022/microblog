@@ -20,3 +20,12 @@ if [ -n "$POSTGRES_MULTIPLE_DATABASES" ]; then
 	done
 	echo "Multiple databases created"
 fi
+
+PG_HBA_CONF="/var/lib/postgresql/data/pg_hba.conf"
+if [ -f "$PG_HBA_CONF" ]; then
+  echo "Modifying pg_hba.conf to use md5 for local connections"
+  sed -i 's/local\s\+all\s\+all\s\+.*$/local all all md5/' "$PG_HBA_CONF"
+  echo "pg_hba.conf modified"
+else
+  echo "pg_hba.conf not found at $PG_HBA_CONF"
+fi

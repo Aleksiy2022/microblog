@@ -17,6 +17,7 @@ asyncpg = "^0.29.0"
 async-factory-boy = "^1.0.1"
 python-multipart = "^0.0.9"
 aiofiles = "^23.2.1"
+aiosqlite = "^0.20.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
@@ -30,6 +31,7 @@ flake8-pie = "^0.16.0"
 
 [tool.pytest.ini_options]
 asyncio_mode="auto"
+filterwarnings = "ignore"
 
 [tool.black]
 line-length = 79
