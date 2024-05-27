@@ -78,7 +78,7 @@ async def get_tweets(
 @router.post("/")
 async def create_tweet(
     tweet_data: Annotated[str, Body(max_length=500)],
-    tweet_media_ids: Annotated[list[int] | None, Body(max_length=5)],
+    tweet_media_ids: Annotated[list[int], Body(max_length=5)],
     current_user: Annotated[
         schemas.UserOut, Depends(get_current_user_by_api_key)
     ],
