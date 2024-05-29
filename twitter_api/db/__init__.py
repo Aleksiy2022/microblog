@@ -11,9 +11,14 @@ __all__ = (
     "medias_qr",
     "likes_qr",
     "TestUser",
-    "TweetFactory"
+    "TweetFactory",
 )
 
 from .db_queries import likes_qr, medias_qr, tweets_qr, users_qr
-from .fake_db_data import UserFactory, create_fake_data_bd, TestUser, TweetFactory
+from .fake_db_data import (
+    TestUser,
+    TweetFactory,
+    UserFactory,
+    create_fake_data_bd,
+)
 from .models import Base, Image, Tweet, TweetLike, User

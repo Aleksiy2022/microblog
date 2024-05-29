@@ -57,12 +57,12 @@ async def delete_user_following_node(
     current_user: Annotated[
         schemas.UserOut, Depends(get_current_user_by_api_key)
     ],
-    session: Annotated[AsyncSession, Depends(scoped_session_db)]
+    session: Annotated[AsyncSession, Depends(scoped_session_db)],
 ):
     if await users_qr.delete_user_following_node(
-            session,
-            follower_id=current_user.id,
-            user_id=id,
+        session,
+        follower_id=current_user.id,
+        user_id=id,
     ):
         return {"result": True}
 

@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from sqlalchemy import delete, select, exists
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -32,10 +32,14 @@ async def create_tweet(
 
 
 async def delete_tweet(
-    session: AsyncSession, tweet_id: int, current_user_id: int,
+    session: AsyncSession,
+    tweet_id: int,
+    current_user_id: int,
 ) -> bool:
     stmt = select(Tweet).where(
-        Tweet.id == tweet_id, Tweet.user_id == current_user_id,)
+        Tweet.id == tweet_id,
+        Tweet.user_id == current_user_id,
+    )
     tweet = await session.scalar(stmt)
     if tweet:
         await session.delete(tweet)
@@ -44,5 +48,5 @@ async def delete_tweet(
     else:
         raise HTTPException(
             status_code=404,
-            detail="Tweet doesn't exist or doesn't belong to you"
+            detail="Tweet doesn't exist or doesn't belong to you",
         )

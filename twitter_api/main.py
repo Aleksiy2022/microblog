@@ -75,9 +75,9 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException):
 async def validation_exception_handler(
     request: Request, exc: RequestValidationError
 ):
-    error_message: dict = exc.errors()[0]
-    error_type: dict = error_message.get("type")
-    error_msg: dict = error_message.get("msg")
+    error_message = exc.errors()[0]
+    error_type = error_message.get("type")
+    error_msg = error_message.get("msg")
     if exc.body:
         error_message = exc.body
     return JSONResponse(
@@ -95,8 +95,8 @@ async def validation_exception_handler(
 @app.middleware("http")
 async def max_upload_size(request: Request, call_next):
     try:
-        content_type = request.headers.get('content-type')
-        content_length = request.headers.get('content-length')
+        content_type = request.headers.get("content-type")
+        content_length = request.headers.get("content-length")
 
         if content_type and "multipart/form-data" in content_type:
             if content_length and int(content_length) > 1 * 1024 * 1024:  # 1MB
@@ -105,11 +105,11 @@ async def max_upload_size(request: Request, call_next):
                     content={
                         "result": False,
                         "error_type": "error max size",
-                        "error_message": "File too large. Maximum allowed size is 5MB",
-                    }
+                        "error_message":
+                            "File too large. Maximum allowed size is 1MB",
+                    },
                 )
     except (ValueError, KeyError):
         pass
 
-    response = await call_next(request)
-    return response
+    return await call_next(request)

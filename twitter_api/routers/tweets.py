@@ -26,9 +26,7 @@ async def create_tweet_likes(
         tweet_id=id,
         current_user_id=current_user.id,
     ):
-        return {
-            "result": True
-        }
+        return {"result": True}
 
 
 @router.delete("/{id}/likes")
@@ -40,19 +38,14 @@ async def delete_tweet_like(
     session: Annotated[AsyncSession, Depends(scoped_session_db)],
 ):
     if await likes_qr.delete_tweet_like(
-            session,
-            tweet_id=id,
-            current_user_id=current_user.id,
+        session,
+        tweet_id=id,
+        current_user_id=current_user.id,
     ):
-        return {
-            "result": True
-        }
+        return {"result": True}
 
 
-@router.get(
-    "/",
-    response_model=schemas.TweetsResponse
-)
+@router.get("/", response_model=schemas.TweetsResponse)
 async def get_tweets(
     session: Annotated[AsyncSession, Depends(scoped_session_db)]
 ):
@@ -115,6 +108,4 @@ async def delete_tweet(
         tweet_id=id,
         current_user_id=current_user.id,
     ):
-        return {
-            "result": True
-        }
+        return {"result": True}

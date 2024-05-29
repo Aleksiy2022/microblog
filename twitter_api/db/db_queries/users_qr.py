@@ -1,7 +1,8 @@
-from sqlalchemy import delete, select, exists
+from fastapi import HTTPException
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
-from fastapi import HTTPException
+
 from ..models import Follower, User
 
 
@@ -32,11 +33,13 @@ async def create_user_following_node(
     follower_id: int,
     user_id: int,
 ) -> bool:
-    stmt = select(exists().where(User.id == user_id))
-    user = await session.scalar(stmt)
+    user_stmt = select(User).where(User.id == user_id)
+    user = await session.scalar(user_stmt)
     if user:
-        stmt = select(exists().where(Follower.user_id == user_id, Follower.follower == follower_id))
-        user_follower_node = await session.scalar(stmt)
+        follower_stmt = select(Follower).where(
+            Follower.user_id == user_id, Follower.follower == follower_id
+        )
+        user_follower_node = await session.scalar(follower_stmt)
         if not user_follower_node:
             new_user_following_node = Follower(
                 user_id=user_id,
@@ -46,9 +49,15 @@ async def create_user_following_node(
             await session.commit()
             return True
         else:
-            raise HTTPException(status_code=409, detail=f"You have already subscribed to this user with id: {user_id}")
+            raise HTTPException(
+                status_code=409,
+                detail=f"You have already subscribed to "
+                f"this user with id: {user_id}",
+            )
     else:
-        raise HTTPException(status_code=404, detail=f"User with id: {user_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"User with id: {user_id} not found"
+        )
 
 
 async def delete_user_following_node(
@@ -56,15 +65,16 @@ async def delete_user_following_node(
     follower_id: int,
     user_id: int,
 ) -> bool:
-    stmt = select(exists().where(Follower.user_id == user_id, Follower.follower == follower_id))
+    stmt = select(Follower).where(
+        Follower.user_id == user_id, Follower.follower == follower_id
+    )
     user_following_node = await session.scalar(stmt)
     if user_following_node:
-        stmt = delete(Follower).where(
-            Follower.user_id == user_id,
-            Follower.follower == follower_id,
-        )
-        await session.execute(stmt)
+        await session.delete(user_following_node)
         await session.commit()
         return True
     else:
-        raise HTTPException(status_code=404, detail=f"You are not subscribed to a user with id {user_id}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"You are not subscribed to a user with id {user_id}",
+        )
