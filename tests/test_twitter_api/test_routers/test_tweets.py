@@ -15,33 +15,36 @@ import pytest
             100,
             404,
             {
-                'result': False,
-                'error_type': 'HTTPException',
-                'error_message': 'Tweet with id: 100 does not exist.'
+                "result": False,
+                "error_type": "HTTPException",
+                "error_message": "Tweet with id: 100 does not exist.",
             },
         ),  # non-existing tweet id
         (
             -1,
             422,
             {
-                'result': False,
-                'error_type': 'greater_than_equal',
-                'error_message': 'Input should be greater than or equal to 1',
+                "result": False,
+                "error_type": "greater_than_equal",
+                "error_message": "Input should be greater than or equal to 1",
             },
-         ),  # test id validation ge
+        ),  # test id validation ge
         (
             10000000,
             422,
             {
-                'result': False,
-                'error_type': 'less_than_equal',
-                'error_message': 'Input should be less than or equal to 9999999',
+                "result": False,
+                "error_type": "less_than_equal",
+                "error_message": "Input should be less "
+                "than or equal to 9999999",
             },
         ),  # test id validation le
-    ]
+    ],
 )
 @pytest.mark.asyncio(scope="session")
-async def test_create_tweet_likes(async_client, tweet_id, expected_status, exp_response_json):
+async def test_create_tweet_likes(
+    async_client, tweet_id, expected_status, exp_response_json
+):
     headers = {"Api-Key": "test"}
     response = await async_client.post(
         f"http://127.0.0.1:8000/api/tweets/{tweet_id}/likes",
@@ -65,33 +68,36 @@ async def test_create_tweet_likes(async_client, tweet_id, expected_status, exp_r
             100,
             404,
             {
-                'result': False,
-                'error_type': 'HTTPException',
-                'error_message': 'Tweet_like does not exist.'
+                "result": False,
+                "error_type": "HTTPException",
+                "error_message": "Tweet_like does not exist.",
             },
         ),  # non-existing tweet id
         (
             -1,
             422,
             {
-                'result': False,
-                'error_type': 'greater_than_equal',
-                'error_message': 'Input should be greater than or equal to 1',
+                "result": False,
+                "error_type": "greater_than_equal",
+                "error_message": "Input should be greater than or equal to 1",
             },
-         ),  # test id validation ge
+        ),  # test id validation ge
         (
             10000000,
             422,
             {
-                'result': False,
-                'error_type': 'less_than_equal',
-                'error_message': 'Input should be less than or equal to 9999999',
+                "result": False,
+                "error_type": "less_than_equal",
+                "error_message": "Input should be less "
+                "than or equal to 9999999",
             },
         ),  # test id validation le
-    ]
+    ],
 )
 @pytest.mark.asyncio(scope="session")
-async def test_delete_tweet_likes(async_client, tweet_id, expected_status, exp_response_json):
+async def test_delete_tweet_likes(
+    async_client, tweet_id, expected_status, exp_response_json
+):
     headers = {"Api-Key": "test"}
     response = await async_client.delete(
         f"http://127.0.0.1:8000/api/tweets/{tweet_id}/likes",
@@ -112,7 +118,9 @@ async def test_get_tweets(async_client):
     assert response.json().get("result") is True
     assert len(response.json().get("tweets")) == 6
     for tweet in response.json().get("tweets"):
-        assert ("id", "content", "attachments", "author", "likes") == tuple(tweet.keys())
+        assert ("id", "content", "attachments", "author", "likes") == tuple(
+            tweet.keys()
+        )
 
 
 @pytest.mark.parametrize(
@@ -141,15 +149,21 @@ async def test_get_tweets(async_client):
             [3],
             422,
             {
-                'result': False,
-                'error_type': 'string_too_long',
-                'error_message': 'String should have at most 500 characters',
+                "result": False,
+                "error_type": "string_too_long",
+                "error_message": "String should have at most 500 characters",
             },
         ),  # Test for max_length constraint
-    ]
+    ],
 )
 @pytest.mark.asyncio(scope="session")
-async def test_create_tweet(async_client, tweet_data, tweet_media_ids, expected_status, exp_response_json):
+async def test_create_tweet(
+    async_client,
+    tweet_data,
+    tweet_media_ids,
+    expected_status,
+    exp_response_json,
+):
     headers = {"Api-Key": "test"}
     response = await async_client.post(
         "http://127.0.0.1:8000/api/tweets/",
@@ -157,7 +171,7 @@ async def test_create_tweet(async_client, tweet_data, tweet_media_ids, expected_
         json={
             "tweet_data": tweet_data,
             "tweet_media_ids": tweet_media_ids,
-        }
+        },
     )
     assert response.status_code == expected_status
     assert response.json() == exp_response_json
@@ -167,51 +181,60 @@ async def test_create_tweet(async_client, tweet_data, tweet_media_ids, expected_
     "tweet_id, expected_status, exp_response_json",
     [
         (
-            -1, 422,
+            -1,
+            422,
             {
-                'result': False,
-                'error_type': 'greater_than_equal',
-                'error_message': 'Input should be greater than or equal to 1',
+                "result": False,
+                "error_type": "greater_than_equal",
+                "error_message": "Input should be greater than or equal to 1",
             },
         ),
         (
-            1, 200,
+            1,
+            200,
             {
-                'result': True,
-            }
-        ),
-        (
-            2, 404,
-            {
-                'result': False,
-                'error_type': 'HTTPException',
-                'error_message': "Tweet doesn't exist or doesn't belong to you"
+                "result": True,
             },
         ),
         (
-            10, 404,
+            2,
+            404,
             {
-                'result': False,
+                "result": False,
                 "error_type": "HTTPException",
-                "error_message": "Tweet doesn't exist or doesn't belong to you"
+                "error_message": "Tweet doesn't exist "
+                "or doesn't belong to you",
             },
         ),
         (
-            10000000, 422,
+            10,
+            404,
+            {
+                "result": False,
+                "error_type": "HTTPException",
+                "error_message": "Tweet doesn't exist "
+                "or doesn't belong to you",
+            },
+        ),
+        (
+            10000000,
+            422,
             {
                 "result": False,
                 "error_type": "less_than_equal",
-                "error_message": "Input should be less than or equal to 9999999",
+                "error_message": "Input should be less "
+                "than or equal to 9999999",
             },
         ),
-    ]
+    ],
 )
 @pytest.mark.asyncio(scope="session")
-async def test_delete_tweet(async_client, tweet_id, expected_status, exp_response_json):
+async def test_delete_tweet(
+    async_client, tweet_id, expected_status, exp_response_json
+):
     headers = {"Api-Key": "test"}
     response = await async_client.delete(
-        f"http://127.0.0.1:8000/api/tweets/{tweet_id}",
-        headers=headers
+        f"http://127.0.0.1:8000/api/tweets/{tweet_id}", headers=headers
     )
     assert response.status_code == expected_status
     assert response.json() == exp_response_json
