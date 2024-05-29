@@ -10,8 +10,8 @@ async def create_tweet_like(
     tweet_id: int,
     current_user_id: int,
 ) -> bool:
-    stmt = select(Tweet).where(Tweet.id == tweet_id)
-    tweet = await session.scalar(stmt)
+    tweet_stmt = select(Tweet).where(Tweet.id == tweet_id)
+    tweet = await session.scalar(tweet_stmt)
     if tweet:
         stmt = select(TweetLike).where(
                 TweetLike.tweet_id == tweet_id,
