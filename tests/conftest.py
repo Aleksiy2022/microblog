@@ -41,6 +41,6 @@ async def create_test_db():
 @pytest.fixture(autouse=True, scope="session")
 async def async_client() -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
+        transport=ASGITransport(app=app), base_url="http://test"  # type: ignore
     ) as async_client:
         yield async_client
