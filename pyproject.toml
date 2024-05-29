@@ -28,6 +28,8 @@ isort = "^5.13.2"
 flake8 = "^7.0.0"
 flake8-bugbear = "^24.4.26"
 flake8-pie = "^0.16.0"
+pytest-cov = "^5.0.0"
+pytest-sugar = "^1.0.0"
 
 [tool.pytest.ini_options]
 asyncio_mode="auto"
