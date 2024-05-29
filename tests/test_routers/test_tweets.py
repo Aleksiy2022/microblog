@@ -124,7 +124,7 @@ async def test_get_tweets(async_client):
             200,
             {
                 "result": True,
-                "tweet_id": 7,
+                "tweet_id": 8,
             },
         ),  # Test without images
         (
@@ -133,7 +133,7 @@ async def test_get_tweets(async_client):
             200,
             {
                 "result": True,
-                "tweet_id": 8,
+                "tweet_id": 9,
             },
         ),  # Test with images
         (
