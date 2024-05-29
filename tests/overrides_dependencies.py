@@ -1,9 +1,11 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated, AsyncGenerator
+
+from fastapi import Depends, Header, HTTPException
 from sqlalchemy import select
-from twitter_api.db import User
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from twitter_api.core import test_db_helper
-from fastapi import Header, Depends, HTTPException
+from twitter_api.db import User
 
 
 async def ovr_scoped_session_db() -> AsyncGenerator[AsyncSession, None]:

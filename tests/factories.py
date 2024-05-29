@@ -4,7 +4,7 @@ from async_factory_boy.factory.sqlalchemy import (  # type: ignore
 )
 
 from twitter_api.core import test_db_helper
-from twitter_api.db import Base, Tweet, User, TweetLike
+from twitter_api.db import Base, Tweet, TweetLike, User
 
 
 class TestUser(AsyncSQLAlchemyFactory):
