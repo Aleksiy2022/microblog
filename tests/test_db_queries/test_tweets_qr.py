@@ -1,8 +1,9 @@
 import pytest
-from twitter_api.core import test_db_helper
-from twitter_api.db import tweets_qr, Tweet
-from sqlalchemy import select
 from fastapi import HTTPException
+from sqlalchemy import select
+
+from twitter_api.core import test_db_helper
+from twitter_api.db import Tweet, tweets_qr
 
 
 @pytest.mark.asyncio(scope="session")
@@ -38,9 +39,7 @@ async def test_create_tweet():
 async def test_delete_tweet():
     session = test_db_helper.get_scoped_session()
     result = await tweets_qr.delete_tweet(
-        session=session,
-        tweet_id=7,
-        current_user_id=2
+        session=session, tweet_id=7, current_user_id=2
     )
     await session.close()
     assert result is True
@@ -49,18 +48,24 @@ async def test_delete_tweet():
 @pytest.mark.parametrize(
     "tweet_id, current_user_id, exp_error_msg",
     [
-        (100, 2, "Tweet doesn't exist or doesn't belong to you"),  # test with not existing tweet_id
-        (7, 3, "Tweet doesn't exist or doesn't belong to you"),  # try to delete a tweet that does not belong to user
-    ]
+        (
+            100,
+            2,
+            "Tweet doesn't exist or doesn't belong to you",
+        ),  # test with not existing tweet_id
+        (
+            7,
+            3,
+            "Tweet doesn't exist or doesn't belong to you",
+        ),  # try to delete a tweet that does not belong to user
+    ],
 )
 @pytest.mark.asyncio(scope="session")
 async def test_delete_tweet_error(tweet_id, current_user_id, exp_error_msg):
     session = test_db_helper.get_scoped_session()
-    with pytest.raises(HTTPException) as ecxinfo:
+    with pytest.raises(HTTPException) as excinfo:
         await tweets_qr.delete_tweet(
-            session=session,
-            tweet_id=tweet_id,
-            current_user_id=current_user_id
+            session=session, tweet_id=tweet_id, current_user_id=current_user_id
         )
     await session.close()
-    assert exp_error_msg in str(ecxinfo.value)
+    assert exp_error_msg in str(excinfo.value)
