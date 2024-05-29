@@ -57,8 +57,6 @@ async def get_tweets(
     session: Annotated[AsyncSession, Depends(scoped_session_db)]
 ):
     tweets = await tweets_qr.get_all_tweets(session)
-    if not tweets:
-        raise HTTPException(status_code=404, detail="No tweets found")
     tweets_response = [
         {
             "id": tweet.id,
@@ -78,7 +76,7 @@ async def get_tweets(
 @router.post("/")
 async def create_tweet(
     tweet_data: Annotated[str, Body(max_length=500)],
-    tweet_media_ids: Annotated[list[int], Body(max_length=5)],
+    tweet_media_ids: Annotated[list[int], Body()],
     current_user: Annotated[
         schemas.UserOut, Depends(get_current_user_by_api_key)
     ],
@@ -112,14 +110,11 @@ async def delete_tweet(
     ],
     session: Annotated[AsyncSession, Depends(scoped_session_db)],
 ):
-    try:
-        if await tweets_qr.delete_tweet(
-            session,
-            tweet_id=id,
-            current_user_id=current_user.id,
-        ):
-            return {
-                "result": True
-            }
-    except SQLAlchemyError:
-        raise HTTPException(status_code=500, detail="Database error")
+    if await tweets_qr.delete_tweet(
+        session,
+        tweet_id=id,
+        current_user_id=current_user.id,
+    ):
+        return {
+            "result": True
+        }
