@@ -8,8 +8,10 @@ from fastapi import Header, Depends, HTTPException
 
 async def ovr_scoped_session_db() -> AsyncGenerator[AsyncSession, None]:
     session = test_db_helper.get_scoped_session()
-    yield session
-    await session.close()
+    try:
+        yield session
+    finally:
+        await session.close()
 
 
 async def ovr_get_current_user_by_api_key(

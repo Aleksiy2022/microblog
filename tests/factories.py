@@ -4,7 +4,7 @@ from async_factory_boy.factory.sqlalchemy import (  # type: ignore
 )
 
 from twitter_api.core import test_db_helper
-from twitter_api.db import Base, Tweet, User
+from twitter_api.db import Base, Tweet, User, TweetLike
 
 
 class TestUser(AsyncSQLAlchemyFactory):
@@ -36,11 +36,28 @@ class TweetFactory(AsyncSQLAlchemyFactory):
     user_id = factory.Sequence(lambda n: "user_id%s" % n)
 
 
-async def create_fake_data_bd():
+class TweetLikeFactory(AsyncSQLAlchemyFactory):
+    class Meta:
+        model = TweetLike
+        sqlalchemy_session = test_db_helper.sc_session
+
+    user_id = 1
+    tweet_id = 2
+
+
+async def create_test_data_bd():
+    async with test_db_helper.engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+
     async with test_db_helper.engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
     await TestUser.create()
     users = await UserFactory.create_batch(5)
+
+    await TweetFactory.create(user_id=1)
+
     for user in users:
         await TweetFactory.create(user_id=user.id)
+
+    await TweetLikeFactory.create()
