@@ -10,8 +10,10 @@ from .db import User, users_qr
 
 async def scoped_session_db() -> AsyncGenerator[AsyncSession, None]:
     session = db_helper.get_scoped_session()
-    yield session
-    await session.close()
+    try:
+        yield session
+    finally:
+        await session.close()
 
 
 async def get_current_user_by_api_key(
