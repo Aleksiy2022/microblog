@@ -188,14 +188,14 @@ async def test_create_tweet(
                 "error_type": "greater_than_equal",
                 "error_message": "Input should be greater than or equal to 1",
             },
-        ),
+        ),  # test with tweet_id less than 1
         (
             1,
             200,
             {
                 "result": True,
             },
-        ),
+        ),  # test with correct data
         (
             2,
             404,
@@ -205,7 +205,7 @@ async def test_create_tweet(
                 "error_message": "Tweet doesn't exist "
                 "or doesn't belong to you",
             },
-        ),
+        ),  # test deleting a tweet that does not belong to the current user
         (
             10,
             404,
@@ -215,7 +215,7 @@ async def test_create_tweet(
                 "error_message": "Tweet doesn't exist "
                 "or doesn't belong to you",
             },
-        ),
+        ),  # test with not existing tweet_id
         (
             10000000,
             422,
@@ -225,7 +225,7 @@ async def test_create_tweet(
                 "error_message": "Input should be less "
                 "than or equal to 9999999",
             },
-        ),
+        ),  # test with tweet_id greater than 9999999
     ],
 )
 @pytest.mark.asyncio(scope="session")
