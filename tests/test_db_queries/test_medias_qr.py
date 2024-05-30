@@ -9,8 +9,7 @@ from twitter_api.db import Image, medias_qr
 async def test_create_media():
     session = test_db_helper.get_scoped_session()
     test_file_name = (
-        "tweets_images_for_tests/1651174528_1-sportishka-"
-        "com-p-mashina-porshe-mashini-krasivo-foto-1.jpg"
+        "test_images/image.jpg"
     )
     result = await medias_qr.create_media(
         session=session, image_src=test_file_name
@@ -31,8 +30,7 @@ async def test_update_data_medias():
 
     stmt = select(Image).where(
         Image.id == 1,
-        Image.src == "tweets_images_for_tests/1651174528_1-sportishka"
-        "-com-p-mashina-porshe-mashini-krasivo-foto-1.jpg",
+        Image.src == "test_images/image.jpg",
     )
     image = await session.scalar(stmt)
     await session.close()
