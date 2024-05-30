@@ -18,7 +18,7 @@ path = os.path.dirname(os.path.abspath(__file__))
                 'result': True,
                 'media_id': 2
             }
-        ),
+        ),  # test with correct data
         (
             os.path.join(
                 path, "test_images", "heavy_image.png"
@@ -28,7 +28,7 @@ path = os.path.dirname(os.path.abspath(__file__))
                 "result": False,
                 'error_type': 'error max size',
                 'error_message': 'File too large. Maximum allowed size is 1MB',
-            }
+            }  # test with an image exceeding 1 mb
         ),
         (
             os.path.join(
@@ -39,8 +39,8 @@ path = os.path.dirname(os.path.abspath(__file__))
                 'result': False,
                 'error_type': 'HTTPException',
                 'error_message': 'File type not supported'
-            }
-        )
+            }  # test with a file that is not an image
+        ),
     ]
 )
 @pytest.mark.asyncio(scope="session")
