@@ -44,7 +44,6 @@ services:
     volumes:
       - ./alembic/versions:/alembic/versions
       - ./static:/static
-      - ./twitter_api:/twitter_api
 
 
   nginx:
