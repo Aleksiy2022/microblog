@@ -27,4 +27,8 @@ https://proglib.io/p/docker-ushel-iz-rf-instrukciya-po-vosstanovleniyu-dostupa-k
       `docker compose up -d.`
 4. После успешного запуска контейнеров приложение будет доступно по адресу http://localhost/
 
-
+## Запуск тестов
+1. Для запуска тестов на локальной машине может понадобиться доступ к папке, созданной докером для хранения данных БД. 
+Для этого выполните команду:
+   `docker exec -it <container_id> chmod -R 777 /var`
+Замените `<container_id>` на идентификатор контейнера с вашим приложением.
