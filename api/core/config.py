@@ -37,16 +37,14 @@ class Settings(BaseSettings):
     db_username: str | None = os.environ.get("DB_USERNAME")
     db_password: str | None = os.environ.get("DB_PASSWORD")
     db_host: str | None = os.environ.get("DB_HOST")
-    db_test_host: str | None = os.environ.get("TEST_DB_HOST")
-    db_port: str | None = os.environ.get("DB_PORT")
     db_name: str | None = os.environ.get("DB_NAME")
     test_db_name: str | None = os.environ.get("TEST_DB_NAME")
     max_file_size_bytes: int = 1048576
     db_url: str = (
-        f"postgresql+asyncpg://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
+        f"postgresql+asyncpg://{db_username}:{db_password}@db:5432/{db_name}"
     )
     test_db_url: str = (
-        f"postgresql+asyncpg://{db_username}:{db_password}@{db_test_host}:{db_port}/{test_db_name}"
+        f"postgresql+asyncpg://{db_username}:{db_password}@localhost:5432/{test_db_name}"
     )
     db_echo: bool = True
     base_dir: str = os.path.dirname(
