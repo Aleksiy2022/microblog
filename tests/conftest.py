@@ -3,13 +3,12 @@ from typing import AsyncGenerator
 
 import pytest
 from httpx import ASGITransport, AsyncClient
-from twitter_api.core import test_db_helper, settings
-from twitter_api.db import Base
-from twitter_api.dependencies import (
-    get_current_user_by_api_key,
-    scoped_session_db,
-)
-from twitter_api.main import app
+
+from api.core import settings, test_db_helper
+from api.db import Base
+from api.dependencies import get_current_user_by_api_key, scoped_session_db
+from api.main import app
+
 from .factories import create_test_data_bd
 from .overrides_dependencies import (
     ovr_get_current_user_by_api_key,
@@ -33,7 +32,7 @@ app.dependency_overrides[get_current_user_by_api_key] = (
 @pytest.fixture(autouse=True, scope="session")
 async def set_test_settings():
     test_dir_uploaded_images = os.path.join(
-        test_dir, "test_twitter_api",
+        test_dir, "test_api",
         "test_routers", "uploaded_test_images"
     )
     settings.dir_uploaded_images = test_dir_uploaded_images

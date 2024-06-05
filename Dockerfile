@@ -1,6 +1,6 @@
 FROM python:3.12
 
-COPY twitter_api twitter_api
+COPY api api
 COPY pyproject.toml poetry.lock ./
 COPY README.md ./
 COPY alembic alembic
@@ -11,5 +11,6 @@ RUN pip install --upgrade pip  \
     && poetry config virtualenvs.create false  \
     && poetry install --no-dev
 
-CMD alembic upgrade head  \
-    && uvicorn twitter_api.main:app --reload --port 8000 --host 0.0.0.0
+CMD alembic revision --autogenerate -m "Create init tables" \
+    && alembic upgrade head  \
+    && uvicorn api.main:app --reload --port 8000 --host 0.0.0.0

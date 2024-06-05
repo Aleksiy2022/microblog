@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "twitter-clone"
+name = "microblog API"
 version = "0.1.0"
 description = ""
 authors = ["Aleksey Kuznetcov"]
@@ -31,6 +31,8 @@ flake8-pie = "^0.16.0"
 pytest-cov = "^5.0.0"
 pytest-sugar = "^1.0.0"
 coverage = "^7.5.3"
+wemake-python-styleguide = "^0.19.2"
+flake8-quotes = "^3.4.0"
 
 [tool.coverage.report]
 exclude_also = [
@@ -43,11 +45,11 @@ asyncio_mode="auto"
 filterwarnings = "ignore"
 
 [tool.black]
-line-length = 79
+line-length = 100
 
 [tool.isort]
 profile = "black"
-line_length = 79
+line_length = 100
 
 [build-system]
 requires = ["poetry-core"]

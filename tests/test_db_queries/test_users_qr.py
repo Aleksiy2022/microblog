@@ -1,8 +1,8 @@
 import pytest
 from fastapi import HTTPException
 
-from twitter_api.core import test_db_helper
-from twitter_api.db import users_qr
+from api.core import test_db_helper
+from api.db import users_qr, User
 
 
 @pytest.mark.parametrize(
@@ -24,86 +24,64 @@ async def test_get_current_user(api_key, exp_result):
 
 
 @pytest.mark.parametrize(
-    "id, user_obj_data",
+    "id, user_data",
     [
         (
             1,
-            (
-                "name",
-                "id",
-                "api_key",
-                "tweets",
-                "followers",
-                "following",
-                "tweet_likes",
-            ),
+            {
+                "name": "Aleksiy",
+                "api_key": "test",
+            },
         ),
         (10, None),
     ],
 )
 @pytest.mark.asyncio(scope="session")
-async def test_get_user_by_id(id, user_obj_data):
+async def test_get_full_user_info_user_by_id(id, user_data):
     session = test_db_helper.get_scoped_session()
-    user = await users_qr.get_user_by_id(session, id)
+    result = await users_qr.get_user_by_id(session, id)
     await session.close()
-    if user_obj_data is None:
-        assert user is None
+    if user_data is None:
+        assert result is None
     else:
-        assert all(field in user.__dict__ for field in user_obj_data)
+        assert isinstance(result, User)
+        assert user_data.get("name") == result.name
+        assert user_data.get("api_key") == result.api_key
 
 
 @pytest.mark.parametrize(
-    "follower_id, user_id, exp_err_msg",
+    "follower_id, user_id, exp_result",
     [
-        (1, 2, None),
-        (1, 2, "You have already subscribed to this user with id: 2"),
-        (1, 10, "User with id: 10 not found"),
+        (1, 2, True),  # try to create a new user following record
+        (1, 2, False),  # try to create a record again with the same data
     ],
 )
 @pytest.mark.asyncio(scope="session")
-async def test_create_user_following_node(follower_id, user_id, exp_err_msg):
+async def test_create_user_following_node(follower_id, user_id, exp_result):
     session = test_db_helper.get_scoped_session()
-    if exp_err_msg is None:
-        result = await users_qr.create_user_following_node(
+    result = await users_qr.create_user_following_node(
+        session=session,
+        follower_id=follower_id,
+        user_id=user_id,
+    )
+    await session.close()
+    assert result == exp_result
+
+
+@pytest.mark.parametrize(
+    "follower_id, user_id, exp_result",
+    [
+        (1, 2, True),
+        (1, 2, False),
+    ],
+)
+@pytest.mark.asyncio(scope="session")
+async def test_delete_user_following_node(follower_id, user_id, exp_result):
+    session = test_db_helper.get_scoped_session()
+    result = await users_qr.delete_user_following_node(
             session=session,
             follower_id=follower_id,
             user_id=user_id,
         )
-        assert result is True
-    else:
-        with pytest.raises(HTTPException) as excinfo:
-            await users_qr.create_user_following_node(
-                session=session,
-                follower_id=follower_id,
-                user_id=user_id,
-            )
-        assert exp_err_msg in str(excinfo.value)
     await session.close()
-
-
-@pytest.mark.parametrize(
-    "follower_id, user_id, exp_err_msg",
-    [
-        (1, 2, None),
-        (1, 2, "You are not subscribed to a user with id 2"),
-    ],
-)
-@pytest.mark.asyncio(scope="session")
-async def test_delete_user_following_node(follower_id, user_id, exp_err_msg):
-    session = test_db_helper.get_scoped_session()
-    if exp_err_msg is None:
-        result = await users_qr.delete_user_following_node(
-            session=session,
-            follower_id=follower_id,
-            user_id=user_id,
-        )
-        assert result is True
-    else:
-        with pytest.raises(HTTPException) as excinfo:
-            await users_qr.delete_user_following_node(
-                session=session,
-                follower_id=follower_id,
-                user_id=user_id,
-            )
-        assert exp_err_msg in str(excinfo.value)
-    await session.close()
+    assert result == exp_result

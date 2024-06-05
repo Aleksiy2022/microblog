@@ -16,12 +16,12 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-from twitter_api.core import settings
+from api import settings
 
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
-from twitter_api.db import Base
+from api.db import Base
 
 target_metadata = Base.metadata
 
