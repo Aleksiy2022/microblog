@@ -9,7 +9,7 @@ from api.db import User
 
 
 async def ovr_scoped_session_db() -> AsyncGenerator[AsyncSession, None]:
-    session = test_db_helper.sc_session
+    session = test_db_helper.get_scoped_session()
     try:
         yield session
     finally:
@@ -23,7 +23,5 @@ async def ovr_get_current_user_by_api_key(
     stmt = select(User).where(User.api_key == api_key)
     user = await session.scalar(stmt)
     if user is None:
-        raise HTTPException(
-            status_code=404, detail=f"User with api_key: {api_key} not found"
-        )
+        raise HTTPException(status_code=404, detail=f"User with api_key: {api_key} not found")
     return user

@@ -1,8 +1,7 @@
 import pytest
-from fastapi import HTTPException
 
 from api.core import test_db_helper
-from api.db import users_qr, User
+from api.db import User, users_qr
 
 
 @pytest.mark.parametrize(
@@ -79,9 +78,9 @@ async def test_create_user_following_node(follower_id, user_id, exp_result):
 async def test_delete_user_following_node(follower_id, user_id, exp_result):
     session = test_db_helper.get_scoped_session()
     result = await users_qr.delete_user_following_node(
-            session=session,
-            follower_id=follower_id,
-            user_id=user_id,
-        )
+        session=session,
+        follower_id=follower_id,
+        user_id=user_id,
+    )
     await session.close()
     assert result == exp_result

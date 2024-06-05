@@ -1,5 +1,4 @@
 import pytest
-from fastapi import HTTPException
 from sqlalchemy import select
 
 from api.core import test_db_helper
@@ -13,7 +12,6 @@ async def test_get_all_tweets():
         session=session,
     )
     await session.close()
-    assert type(result) is list
     assert len(result) == 7
 
 
@@ -40,13 +38,13 @@ async def test_create_tweet():
     [
         (9, 2, True),
         (20, 2, False),
-    ]
+    ],
 )
 @pytest.mark.asyncio(scope="session")
 async def test_delete_tweet(tweet_id, user_id, exp_result):
     session = test_db_helper.get_scoped_session()
     result = await tweets_qr.delete_tweet(
-        session=session, tweet_id=tweet_id, current_user_id=user_id
+        session=session, tweet_id=tweet_id, current_user_id=user_id,
     )
     await session.close()
     assert result == exp_result

@@ -1,5 +1,5 @@
 """
-Package test_db_queries
+Package test_db_queries.
 
 This package contains tests for testing database queries.
 

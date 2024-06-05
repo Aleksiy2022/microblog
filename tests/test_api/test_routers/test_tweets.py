@@ -1,5 +1,4 @@
 import pytest
-from fastapi import HTTPException
 
 
 @pytest.mark.parametrize(
@@ -22,27 +21,29 @@ from fastapi import HTTPException
             },
         ),  # test id validation ge
         (
-            1, 404,
+            1,
+            404,
             {
                 "result": False,
                 "error_type": "HTTPException",
-                "error_message": "Tweet with id: 1 does not exist or you have already liked this tweet."
+                "error_message":
+                    "Tweet with id: 1 does not exist or you have already liked this tweet.",
             },
         ),  # test raise exception
         (
-            20, 404,
+            20,
+            404,
             {
                 "result": False,
                 "error_type": "HTTPException",
-                "error_message": "Tweet with id: 20 does not exist or you have already liked this tweet."
+                "error_message":
+                    "Tweet with id: 20 does not exist or you have already liked this tweet.",
             },  # try to like non-existing tweet
         ),
     ],
 )
 @pytest.mark.asyncio(scope="session")
-async def test_create_tweet_likes(
-    async_client, tweet_id, expected_status, exp_response_json
-):
+async def test_create_tweet_likes(async_client, tweet_id, expected_status, exp_response_json):
     headers = {"Api-Key": "test"}
     response = await async_client.post(
         f"http://127.0.0.1:8000/api/tweets/{tweet_id}/likes",
@@ -71,20 +72,19 @@ async def test_create_tweet_likes(
                 "error_message": "Input should be greater than or equal to 1",
             },
         ),  # test id validation ge
-(
-            20, 404,
+        (
+            20,
+            404,
             {
                 "result": False,
                 "error_type": "HTTPException",
-                "error_message": "A tweet like with id: 20 does not exist."
+                "error_message": "A tweet like with id: 20 does not exist.",
             },
-        )  # test raise exception
+        ),  # test raise exception
     ],
 )
 @pytest.mark.asyncio(scope="session")
-async def test_delete_tweet_likes(
-    async_client, tweet_id, expected_status, exp_response_json
-):
+async def test_delete_tweet_likes(async_client, tweet_id, expected_status, exp_response_json):
     headers = {"Api-Key": "test"}
     response = await async_client.delete(
         f"http://127.0.0.1:8000/api/tweets/{tweet_id}/likes",
@@ -105,9 +105,7 @@ async def test_get_tweets(async_client):
     assert response.json().get("result") is True
     assert len(response.json().get("tweets")) == 6
     for tweet in response.json().get("tweets"):
-        assert ("id", "content", "attachments", "author", "likes") == tuple(
-            tweet.keys()
-        )
+        assert tuple(tweet.keys()) == ("id", "content", "attachments", "author", "likes")
 
 
 @pytest.mark.parametrize(
@@ -189,8 +187,7 @@ async def test_create_tweet(
             {
                 "result": False,
                 "error_type": "HTTPException",
-                "error_message": "Tweet doesn't exist "
-                "or doesn't belong to you",
+                "error_message": "Tweet doesn't exist or doesn't belong to you",
             },
         ),  # test deleting a tweet that does not belong to the current user
         (
@@ -199,19 +196,16 @@ async def test_create_tweet(
             {
                 "result": False,
                 "error_type": "HTTPException",
-                "error_message": "Tweet doesn't exist "
-                "or doesn't belong to you",
+                "error_message": "Tweet doesn't exist or doesn't belong to you",
             },
         ),  # test with not existing tweet_id
     ],
 )
 @pytest.mark.asyncio(scope="session")
-async def test_delete_tweet(
-    async_client, tweet_id, expected_status, exp_response_json
-):
+async def test_delete_tweet(async_client, tweet_id, expected_status, exp_response_json):
     headers = {"Api-Key": "test"}
     response = await async_client.delete(
-        f"http://127.0.0.1:8000/api/tweets/{tweet_id}", headers=headers
+        f"http://127.0.0.1:8000/api/tweets/{tweet_id}", headers=headers,
     )
     assert response.status_code == expected_status
     assert response.json() == exp_response_json
