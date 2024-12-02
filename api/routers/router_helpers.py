@@ -28,7 +28,7 @@ async def save_tweet_image(image: UploadFile) -> str | bool:
     image_extensions = (".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff")
     file_name: str | None = image.filename
 
-    if not file_name or not file_name.endswith(image_extensions):
+    if not file_name or not file_name.lower().endswith(image_extensions):
         return False
 
     file_path = os.path.join(settings.dir_uploaded_images, file_name)
